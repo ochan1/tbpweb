@@ -14,7 +14,7 @@ class Instructor(models.Model):
     last_name        = models.CharField(max_length=255, default="")
     department       = models.ForeignKey(Department, on_delete=models.CASCADE, null=True)
 
-    # Instructor revokes exam permissions
+    # Instructor allowing exams (Exams are Copyrighted)
     exam_permissions = models.BooleanField(default=False)
 
     def getFullName(self):

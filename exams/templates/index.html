@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block title %}
+Exams
+{% endblock %}
+
+{% block heading %}
+Exams
+{% endblock %}
+
+{% block content %}
+<div id="actual-contents">
+    {% for department in departments %}
+        <h1>{{ department.long_name }}</h1>
+        <ul>
+            {% for course in courses %}
+                {% if course.department.abbreviated_name == department.abbreviated_name %}
+                    <li>
+                        <a href="/exams/course/{{ department.abbreviated_name }}/{{ course.number }}/">{{ department.abbreviated_name }} {{ course.number }}</a>
+                    </li>
+                {% endif %}
+            {% endfor %}
+        </ul>
+    {% endfor %}
+</div>
+{% endblock %}

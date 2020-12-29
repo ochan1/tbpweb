@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+
+{% block title %}{{ course.department.abbreviated_name }} {{ course.number }} exams{% endblock %}
+
+
+{% block heading %}{{ course.department.abbreviated_name }} {{ course.number }} Exams{% if selectedTerm|length > 0 %} ({{ selectedTerm }}){% endif %}{% endblock %}
+
+{% block content %}
+<table>
+    <tbody>
+        <tr>
+            <td><b>Semester</b></td>
+            <td><b>Instructors</b></td>
+            {% for midterm in midterms %}
+                <td><b>{{ midterm.exams.exam_type }} {{ midterm.exams.exam_number }}</b></td>
+            {% endfor %}
+            {% for quiz in quizzes %}
+                <td><b>{{ quiz.exams.exam_type }} {{ quiz.exams.exam_number }}</b></td>
+            {% endfor %}
+            {% for other in others %}
+                <td><b>{{ other.exams.exam_type }} {{ other.exams.exam_number }}</b></td>
+            {% endfor %}
+            {% if finals.count == 1 %}
+                {% for final in finals %}
+                    <td><b>{{ final.exams.exam_type }}</b></td>
+                {% endfor %}
+            {% else %}
+                {% for final in finals %}
+                    <td><b>{{ final.exams.exam_type }} {{ final.exams.exam_number }}</b></td>
+                {% endfor %}
+            {% endif %}
+        </tr>
+        {% for semester in exams %}
+            <tr>
+                {% if semester.release %}
+                    <td>{{ semester.semester }}</td>
+                    <td>{{ semester.instructor.name }}</td>
+                    <td>
+                        {% if semester.midterm1 %}
+                            <a href="{{ semester.midterm1.url }}">[pdf]</a> 
+                        {% endif %}
+                        {% if semester.midterm1_sol %}
+                            <a href="{{ semester.midterm1_sol.url }}">[solution]</a>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if semester.midterm2 %}
+                            <a href="{{ semester.midterm2.url }}">[pdf]</a> 
+                        {% endif %}
+                        {% if semester.midterm2_sol %}
+                            <a href="{{ semester.midterm2_sol.url }}">[solution]</a>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if semester.midterm3 %}
+                            <a href="{{ semester.midterm3.url }}">[pdf]</a> 
+                        {% endif %}
+                        {% if semester.midterm3_sol %}
+                            <a href="{{ semester.midterm3_sol.url }}">[solution]</a>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if semester.final %}
+                            <a href="{{ semester.final.url }}">[pdf]</a> 
+                        {% endif %}
+                        {% if semester.final_sol %}
+                            <a href="{{ semester.final_sol.url }}">[solution]</a>
+                        {% endif %}
+                    </td>
+                {% else %}
+                    <td>{{ semester.semester }}</td>
+                    <td>{{ semester.instructor.name }}</td>
+                    <td>
+                        Unreleased
+                    </td>
+                    <td>
+                        Unreleased
+                    </td>
+                    <td>
+                        Unreleased
+                    </td>
+                    <td>
+                        Unreleased
+                    </td>
+                {% endif %}
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
+
