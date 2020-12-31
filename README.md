@@ -12,6 +12,7 @@ Try to install Virtual Box 6.0.14, as there have been some issues in the past wi
 Fork the tbpweb repository and clone your fork to your local machine (you can clone using the Git from Mac Termainal, Windows Command Prompt, or Windows Git Bash (you may need to install Git to your Windows machine))
 
 On Mac: Open **Terminal**
+
 On Windows: Open **Command Prompt** as **Administrator** (not Git Bash)
 
 Then, cd into the cloned directory.
