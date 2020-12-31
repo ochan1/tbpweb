@@ -4,20 +4,26 @@ TBP CA-A website rework, build in Django
 ## Setup 
 
 **Vagrant** will automatically setup a virtual machine with the correct
-setup for developing `hknweb`.
+setup for developing `tbpweb`.
 
 Install [Vagrant](https://www.vagrantup.com/) and [VirtualBox](https://www.virtualbox.org/wiki/Download_Old_Builds_6_0)
 Try to install Virtual Box 6.0.14, as there have been some issues in the past with other versions of Virtual Box in terms of compatibility of Vagrant.
 
-Fork the tbpweb repository and clone your fork to your local machine 
+Fork the tbpweb repository and clone your fork to your local machine (you can clone using the Git from Mac Termainal, Windows Command Prompt, or Windows Git Bash (you may need to install Git to your Windows machine))
 
-Open terminal, and cd into the cloned directory. Check to make sure there is a Vagrantfile in the directory. From there, type
+On Mac: Open **Terminal**
+On Windows: Open **Command Prompt** as **Administrator** (not Git Bash)
+
+Then, cd into the cloned directory.
+
+Check to make sure there is a Vagrantfile in the directory. From there, type
 
 ```sh
 $ vagrant up
 ```
+(Note: If on Windows you encounter an Error 71, please make sure you 1) Are using Windows **Command Prompt** (not Git Bash), and 2) Run Windows Command Prompt as **Administrator**)
 
-which will download and boot a Linux virtual machine, then run setup.
+which will download and boot a Linux virtual machine, then setup the virtual machine.
 
 To access the environment, run
 
@@ -40,6 +46,8 @@ Developing on `tbpweb` requires a virtual environment so that every developer ha
 ```sh
 $ make venv
 ```
+
+(Note: If on Windows you encounter an Error 71, please make sure you 1) Are using Windows **Command Prompt** (not Git Bash), and 2) Run Windows Command Prompt as **Administrator**)
 
 Next, we need to have our current terminal/shell use the virtual environment we just created. We do this through:
 
