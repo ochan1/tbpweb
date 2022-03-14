@@ -1,7 +1,7 @@
 from django import forms
 from django.forms import formsets
 
-from resumes.models import Resume
+from resumes.models.resume import Resume
 from shortcuts import get_file_mimetype
 
 

@@ -25,7 +25,7 @@ from resumes.forms import ResumeForm
 from resumes.forms import ResumeListFormSet
 from resumes.forms import ResumeCritiqueFormSet
 from resumes.forms import ResumeVerifyFormSet
-from resumes.models import Resume
+from resumes.models.resume import Resume
 from shortcuts import get_object_or_none
 from user_profiles.models import CollegeStudentInfo
 
