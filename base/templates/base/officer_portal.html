@@ -17,7 +17,7 @@
   <li><a href="{% url 'project-reports:list' %}">Project Reports</a></li>
   {% endif %}
   {% if perms.base.view_officer_contacts %}
-  <li><a href="{% url 'officer-contacts' %}">Officer Contact Info (import into Gmail)</a></li>
+  <li><a href="{% url 'base:officer-contacts' %}">Officer Contact Info (import into Gmail)</a></li>
   {% endif %}
   <li><a href="https://tbpcaa.slack.com/" target="_blank">Officer Slack Chat</a></li>
   {% if perms.minutes.view_minutes %}
