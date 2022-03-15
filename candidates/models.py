@@ -10,7 +10,7 @@ from base.models import Term
 from events.models import Event, EventAttendance, EventSignUp, EventType
 from exams.models import Exam
 from syllabi.models import Syllabus
-from resumes.models import Resume
+from resumes.models.resume import Resume
 
 
 class Candidate(models.Model):

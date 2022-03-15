@@ -45,7 +45,7 @@ from events.models import EventType
 from exams.models import Exam
 from houses.models import House
 from notifications.models import Notification
-from resumes.models import Resume
+from resumes.models.resume import Resume
 from syllabi.models import Syllabus
 from shortcuts import get_object_or_none
 from user_profiles.models import UserProfile
