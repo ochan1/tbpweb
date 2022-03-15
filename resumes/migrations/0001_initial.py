@@ -21,7 +21,7 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('gpa', models.DecimalField(decimal_places=3, help_text='GPA must have three decimal places (ex. 3.750)', max_digits=4, verbose_name='GPA')),
                 ('full_text', models.TextField(help_text='Full text of the resume')),
-                ('resume_file', models.FileField(help_text='PDF only please', upload_to=resumes.models.Resume.rename_file, verbose_name='File')),
+                ('resume_file', models.FileField(help_text='PDF only please', upload_to=resumes.models.resume.Resume.rename_file, verbose_name='File')),
                 ('verified', models.NullBooleanField(choices=[(None, 'Pending'), (True, 'Approved'), (False, 'Denied')])),
                 ('critique', models.BooleanField(default=True, help_text='Request an officer to critique your resume', verbose_name='Critique requested')),
                 ('release', models.BooleanField(default=True, verbose_name='Release to companies')),
