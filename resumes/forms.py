@@ -1,7 +1,9 @@
 from django import forms
 from django.forms import formsets
+from django.db.models import Q
 
 from resumes.models.resume import Resume
+from resumes.models.resume_rubric import ResumeCriteria, ResumeReview
 from shortcuts import get_file_mimetype
 
 
@@ -74,6 +76,33 @@ class ResumeCritiqueForm(forms.ModelForm):
 class BaseResumeCritiqueForm(formsets.BaseFormSet):
     def total_form_count(self):
         return Resume.objects.filter(critique=True).count()
+
+
+class ResumeReviewCritiqueForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super(ResumeReviewCritiqueForm, self).__init__(*args, **kwargs)
+        self.fields['criterias'].queryset = ResumeCriteria.objects.filter(Q(visible_grader=True) & (Q(category=None) | Q(category__visible_grader=True)))
+        self.fields['criterias']
+
+    class Meta():
+        model = ResumeReview
+        fields = ('criterias', 'comments', 'email_sent', )
+    
+    def save(self, *args, **kwargs):
+        criterias = self.cleaned_data['criterias']
+        comments = self.cleaned_data['comments']
+        email_sent = self.cleaned_data['email_sent']
+
+        resume_review = self.instance
+
+        resume_review.criterias.set(criterias)
+        resume_review.comments = comments
+        resume_review.email_sent = email_sent
+        
+        resume_review.save()
+
+        return super(ResumeReviewCritiqueForm, self).save(*args, **kwargs)
+    
 
 # pylint: disable=C0103
 ResumeListFormSet = formsets.formset_factory(
