@@ -1,3 +1,5 @@
+from chosen import forms as chosen_forms
+
 from django import forms
 from django.forms import formsets
 from django.db.models import Q
@@ -81,12 +83,15 @@ class BaseResumeCritiqueForm(formsets.BaseFormSet):
 class ResumeReviewCritiqueForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(ResumeReviewCritiqueForm, self).__init__(*args, **kwargs)
+        self.fields['criterias'].required = False
         self.fields['criterias'].queryset = ResumeCriteria.objects.filter(Q(visible_grader=True) & (Q(category=None) | Q(category__visible_grader=True)))
-        self.fields['criterias']
+        self.fields['criterias'].help_text = 'Hold down "Control", or "Command" on a Mac, to select more than one.'
 
     class Meta():
         model = ResumeReview
         fields = ('criterias', 'comments', 'email_sent', )
+    
+    criterias = chosen_forms.ChosenModelMultipleChoiceField(ResumeCriteria.objects)
     
     def save(self, *args, **kwargs):
         criterias = self.cleaned_data['criterias']
