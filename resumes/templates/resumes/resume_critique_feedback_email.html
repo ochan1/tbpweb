@@ -1,0 +1,26 @@
+Hi {{ requestee }}!
+
+We've reviewed your resume! Below are some points you should consider looking into:
+
+<ul>
+{% for category in critique_categories %}
+    <li>{% category.category_text %}</li>
+    {% for critique in category.critique_items %}
+    <ul>
+        <li>{% critique.choice_text %}</li>
+    </ul>
+    {% endfor %}
+{% endfor %}
+</ul>
+
+{% if comments %}
+Comments:
+
+<pre>
+{% comments %}
+</pre>
+{% endif %}
+
+Thank you
+
+-TBP {{ committee }} Committee
