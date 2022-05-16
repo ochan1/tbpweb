@@ -16,6 +16,8 @@ class ResumeReview(models.Model):
     resume = models.ForeignKey(Resume,
                                 help_text="Resume related to this review.",
                                 on_delete=models.CASCADE)
+    created = models.DateTimeField(auto_now_add=True)
+    resume_update_date = models.DateTimeField(help_text="The date of the last resume update date, to make sure this review is for the current resume version")
     criterias = models.ManyToManyField(ResumeCriteria)
     other_texts = models.TextField()
     email_sent = models.BooleanField(default=False)

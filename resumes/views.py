@@ -120,6 +120,34 @@ class ResumeCritiqueView(ResumeViewMixin, FormView):
         return context
 
 
+class ResumePerformingCritiqueView(ResumeViewMixin, FormView):
+    """A resume critique dashboard for one resume to perform critique on with a rubric."""
+    # form_class = ResumeCritiqueFormSet
+    # success_url = reverse_lazy('resumes:critique')
+    # template_name = 'resumes/critique.html'
+
+    def get_form(self, form_class):
+        pass
+        # formset = super(ResumeCritiqueView, self).get_form(form_class)
+        # resumes = Resume.objects.filter(critique=True).select_related(
+        #     'user__userprofile', 'user__collegestudentinfo',
+        #     'user__collegestudentinfo__grad_term',
+        #     'user__studentorguserprofile__initiation_term').prefetch_related(
+        #     'user__collegestudentinfo__major')
+        # for i, resume in enumerate(resumes):
+        #     formset[i].instance = resume
+        #     # display the inverse of the value stored in resume.critique
+        #     # for the "critique completed" column.
+        #     formset[i].initial = {'critique': not resume.critique}
+        # return formset
+
+    def get_context_data(self, **kwargs):
+        pass
+        # context = super(ResumeCritiqueView, self).get_context_data(**kwargs)
+        # context['critique'] = True
+        # return context
+
+
 class ResumeEditView(FormView):
     form_class = ResumeForm
     success_url = reverse_lazy('resumes:edit')

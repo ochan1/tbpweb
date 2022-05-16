@@ -2,6 +2,7 @@ from django import forms
 from django.forms import formsets
 
 from resumes.models.resume import Resume
+from resumes.models.resume_rubric import ResumeReview
 from shortcuts import get_file_mimetype
 
 
@@ -74,6 +75,20 @@ class ResumeCritiqueForm(forms.ModelForm):
 class BaseResumeCritiqueForm(formsets.BaseFormSet):
     def total_form_count(self):
         return Resume.objects.filter(critique=True).count()
+
+
+class ResumePerformingCritiqueForm(forms.ModelForm):
+    class Meta(object):
+        model = ResumeReview
+        fields = ('critique',)
+
+    def clean(self):
+        cleaned_data = super(ResumeCritiqueForm, self).clean()
+        # save the inverse of the value indicated under the
+        # "critique completed" column to resume.critique.
+        cleaned_data['critique'] = not cleaned_data['critique']
+        return cleaned_data
+
 
 # pylint: disable=C0103
 ResumeListFormSet = formsets.formset_factory(
