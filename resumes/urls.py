@@ -1,10 +1,7 @@
 from django.urls import re_path
 
-from resumes.views import ResumeListView
-from resumes.views import ResumeCritiqueView
-from resumes.views import ResumeDownloadView
-from resumes.views import ResumeEditView
-from resumes.views import ResumeVerifyView
+from resumes.views import ResumeListView, ResumeCritiqueView, ResumeDownloadView, \
+                          ResumeEditView, ResumeVerifyView, ResumeReviewCritiqueView
 
 
 urlpatterns = [
@@ -15,4 +12,6 @@ urlpatterns = [
         ResumeDownloadView.as_view(), name='download'),
     re_path(r'^critique/$', ResumeCritiqueView.as_view(), name='critique'),
     re_path(r'^verify/$', ResumeVerifyView.as_view(), name='verify'),
+    re_path(r'^critique/review_critique/(?P<user_pk>\d+)/$',
+        ResumeReviewCritiqueView.as_view(), name='review_critique'),
 ]

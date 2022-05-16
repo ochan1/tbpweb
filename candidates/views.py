@@ -45,7 +45,7 @@ from events.models import EventType
 from exams.models import Exam
 from houses.models import House
 from notifications.models import Notification
-from resumes.models import Resume
+from resumes.models.resume import Resume
 from syllabi.models import Syllabus
 from shortcuts import get_object_or_none
 from user_profiles.models import UserProfile
@@ -458,7 +458,7 @@ class ChallengeVerifyView(TermParameterMixin, FormView):
         kwargs['user'] = self.request.user
         return kwargs
 
-    def get_form(self, form_class):
+    def get_form(self, form_class=form_class):
         """Initialize each form in the formset with a challenge."""
         formset = super(ChallengeVerifyView, self).get_form(form_class)
         challenges = Challenge.objects.select_related(

@@ -26,7 +26,7 @@ from companies.forms import CompanyFormWithExpiration
 from companies.forms import CompanyRepCreationForm
 from companies.models import Company
 from companies.models import CompanyRep
-from resumes.models import Resume
+from resumes.models.resume import Resume
 from user_profiles.models import UserProfile
 
 

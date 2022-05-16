@@ -18,14 +18,11 @@ from django.utils.encoding import smart_bytes
 from django.views.generic import DetailView
 from django.views.generic.edit import FormView
 
-from base.models import Officer
-from base.models import OfficerPosition
-from base.models import Term
-from resumes.forms import ResumeForm
-from resumes.forms import ResumeListFormSet
-from resumes.forms import ResumeCritiqueFormSet
-from resumes.forms import ResumeVerifyFormSet
+from base.models import Officer, OfficerPosition, Term
+from resumes.forms import ResumeForm, ResumeListFormSet, ResumeCritiqueFormSet, \
+                          ResumeVerifyFormSet, ResumeReviewCritiqueForm
 from resumes.models.resume import Resume
+from resumes.models.resume_rubric import ResumeReview
 from shortcuts import get_object_or_none
 from user_profiles.models import CollegeStudentInfo
 
@@ -53,7 +50,7 @@ class ResumeListView(ResumeViewMixin, FormView):
     success_url = reverse_lazy('resumes:list')
     template_name = 'resumes/list.html'
 
-    def get_form(self, form_class):
+    def get_form(self, form_class=form_class):
         formset = super(ResumeListView, self).get_form(form_class)
         resumes = Resume.objects.select_related(
             'user__userprofile', 'user__collegestudentinfo',
@@ -76,7 +73,7 @@ class ResumeVerifyView(ResumeViewMixin, FormView):
     success_url = reverse_lazy('resumes:verify')
     template_name = 'resumes/verify.html'
 
-    def get_form(self, form_class):
+    def get_form(self, form_class=form_class):
         formset = super(ResumeVerifyView, self).get_form(form_class)
         resumes = Resume.objects.filter(verified__isnull=True).select_related(
             'user__userprofile', 'user__collegestudentinfo',
@@ -100,7 +97,7 @@ class ResumeCritiqueView(ResumeViewMixin, FormView):
     success_url = reverse_lazy('resumes:critique')
     template_name = 'resumes/critique.html'
 
-    def get_form(self, form_class):
+    def get_form(self, form_class=form_class):
         formset = super(ResumeCritiqueView, self).get_form(form_class)
         resumes = Resume.objects.filter(critique=True).select_related(
             'user__userprofile', 'user__collegestudentinfo',
@@ -120,33 +117,55 @@ class ResumeCritiqueView(ResumeViewMixin, FormView):
         return context
 
 
-class ResumePerformingCritiqueView(ResumeViewMixin, FormView):
-    """A resume critique dashboard for one resume to perform critique on with a rubric."""
-    # form_class = ResumeCritiqueFormSet
-    # success_url = reverse_lazy('resumes:critique')
-    # template_name = 'resumes/critique.html'
+class ResumeReviewCritiqueView(FormView):
+    """View a resume and provide a rubric to check off from on the side."""
+    form_class = ResumeReviewCritiqueForm
+    template_name = 'resumes/resume_review_critique.html'
+    user = None
+    resume = None
 
-    def get_form(self, form_class):
-        pass
-        # formset = super(ResumeCritiqueView, self).get_form(form_class)
-        # resumes = Resume.objects.filter(critique=True).select_related(
-        #     'user__userprofile', 'user__collegestudentinfo',
-        #     'user__collegestudentinfo__grad_term',
-        #     'user__studentorguserprofile__initiation_term').prefetch_related(
-        #     'user__collegestudentinfo__major')
-        # for i, resume in enumerate(resumes):
-        #     formset[i].instance = resume
-        #     # display the inverse of the value stored in resume.critique
-        #     # for the "critique completed" column.
-        #     formset[i].initial = {'critique': not resume.critique}
-        # return formset
+    @method_decorator(login_required)
+    @method_decorator(
+        permission_required('resumes.change_resume', raise_exception=True))
+    def dispatch(self, *args, **kwargs):
+        if 'user_pk' in self.kwargs:
+            # Check whether the user has permission to view other people's
+            # resumes
+            if not self.request.user.has_perm('resumes.view_resumes'):
+                raise PermissionDenied
 
+            self.user = get_object_or_404(
+                get_user_model(), pk=self.kwargs['user_pk'])
+            
+            self.resume = get_object_or_none(Resume, user=self.user)
+        else:
+            raise PermissionDenied
+        return super(ResumeReviewCritiqueView, self).dispatch(*args, **kwargs)
+    
+    def get_success_url(self):
+        user_pk = self.kwargs["user_pk"]
+        return reverse_lazy("resumes:review_critique", kwargs={"user_pk": user_pk})
+
+    def get_form(self, form_class=form_class):
+        form = super(ResumeReviewCritiqueView, self).get_form(form_class)
+        if self.resume:
+            resume_review, _ = ResumeReview.objects.get_or_create(resume=self.resume)
+            form.instance = resume_review
+            form.initial = {
+                'criterias': form.instance.criterias.all(),
+                'comments': form.instance.comments,
+                'email_sent': form.instance.email_sent}
+        return form
+    
     def get_context_data(self, **kwargs):
-        pass
-        # context = super(ResumeCritiqueView, self).get_context_data(**kwargs)
-        # context['critique'] = True
-        # return context
+        context = super(ResumeReviewCritiqueView, self).get_context_data(**kwargs)
+        context['resume'] = self.resume
+        return context
 
+    def form_valid(self, form):
+        form.save()
+        messages.success(self.request, 'Changes saved!')
+        return super(ResumeReviewCritiqueView, self).form_valid(form)
 
 class ResumeEditView(FormView):
     form_class = ResumeForm
@@ -161,7 +180,7 @@ class ResumeEditView(FormView):
         self.resume = get_object_or_none(Resume, user=self.request.user)
         return super(ResumeEditView, self).dispatch(*args, **kwargs)
 
-    def get_form(self, form_class):
+    def get_form(self, form_class=form_class):
         form = super(ResumeEditView, self).get_form(form_class)
         if self.resume:
             form.instance = self.resume

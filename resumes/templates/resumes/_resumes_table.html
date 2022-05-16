@@ -46,7 +46,10 @@ footable.
       {% with student_info=resume.user.userprofile.get_college_student_info %}
       <tr>
         {% if critique %}
-        <td>{{ resume_form.critique }}</td>
+        <td>
+          {{ resume_form.critique }}
+          <p><a href="review_critique/{{ resume.user.pk }}">Critique</a></p>
+        </td>
         {% endif %}
         {% if verify or all %}
         <td>{{ resume_form.verified }}</td>
