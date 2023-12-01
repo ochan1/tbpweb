@@ -39,16 +39,16 @@ To run the Django development server (which runs a web server locally), run
 ```sh
 $ python manage.py runserver
 ```
-which will make the web site available at `http://127.0.0.1:8000`.
+which will make the development web site available `http://127.0.0.1:8000`.
 
-You may also use `python manage.py runserver 0.0.0.0:3000` to use `http://localhost:3000` or `http://0.0.0.0:3000`
+You may choose to run the development web site on a different address and port. For example: `python manage.py runserver 0.0.0.0:3000` will run the site on `http://localhost:3000` or `http://0.0.0.0:3000`. You probably will use this when running multiple Django projects.
 
 If you would like to access the admin interface in the local web server, run
 ```sh
 $ python manage.py createsuperuser
 ```
 
-You will be prompted for some login info, after which you should be able to access the admin interface with your super user credentials at `http://localhost:3000/admin`.
+You will be prompted for some login info, after which you should be able to access the admin interface with your super user credentials at `http://127.0.0.1:8000/admin`.
 
 If there are development conflicts between Operating Systems, a solution that works on Linux takes precedence (as the destination OS on Berkeley's OCF)! Unix developers should also try to make their code Windows-friendly for the Window developers.
 
