@@ -6,7 +6,7 @@ from django.contrib.auth.models import User as DefaultUser
 from django.core.exceptions import ValidationError
 from django.test import TestCase
 from django.test.utils import override_settings
-from mock import patch
+from unittest.mock import patch
 
 from accounts.forms import AuthenticationForm
 from companies.models import Company

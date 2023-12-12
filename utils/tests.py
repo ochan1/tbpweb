@@ -3,8 +3,8 @@ import os
 from django.core.management.base import CommandError
 from django.test import TestCase
 from django.test.utils import override_settings
-from mock import patch
-import mox
+from unittest.mock import patch
+import unittest.mox
 
 from utils import create_dev_db
 from utils.dev import DevServer

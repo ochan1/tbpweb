@@ -3,7 +3,7 @@ import datetime
 from django.contrib.auth import get_user_model
 from django.test import TestCase
 from django.utils import timezone
-import mox
+import unittest.mox
 
 from base.models import OfficerPosition
 from base.models import Term
@@ -44,7 +44,7 @@ class ProjectReportTest(TestCase):
         self.mox.StubOutWithMock(timezone, 'now')
 
         mock_time = timezone.make_aware(
-            datetime.datetime(2012, 01, 01, 01, 01, 01), self.tz)
+            datetime.datetime(2012, 1, 1, 1, 1, 1), self.tz)
         timezone.now().MultipleTimes().AndReturn(mock_time)
 
         self.mox.ReplayAll()
@@ -69,7 +69,7 @@ class ProjectReportTest(TestCase):
 
     def test_complete_time_no_overwrite(self):
         original_time = timezone.make_aware(
-            datetime.datetime(2012, 01, 01, 01, 01, 01), self.tz)
+            datetime.datetime(2012, 1, 1, 1, 1, 1), self.tz)
 
         self.project_report.complete = True
         self.project_report.first_completed_at = original_time
