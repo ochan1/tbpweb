@@ -4,7 +4,7 @@ from django.core.management.base import CommandError
 from django.test import TestCase
 from django.test.utils import override_settings
 from unittest.mock import patch
-import unittest.mox
+import unittest.mock as mock
 
 from utils import create_dev_db
 from utils.dev import DevServer
@@ -104,10 +104,10 @@ class DevCommandTest(TestCase):
 
 class CreateDevDBTest(TestCase):
     def setUp(self):
-        self.mox = mox.Mox()
+        self.mock = mock.Mock()
 
     def tearDown(self):
-        self.mox.UnsetStubs()
+        self.mock.UnsetStubs()
 
     def test_is_valid_db_name(self):
         self.assertTrue(create_dev_db.is_valid_db_name('tbpweb_dev_panda'))
@@ -116,14 +116,14 @@ class CreateDevDBTest(TestCase):
         self.assertFalse(create_dev_db.is_valid_db_name('tbpweb_dev_panda!'))
 
     def test_create_dev_db(self):
-        self.mox.StubOutWithMock(create_dev_db.MySQLdb, 'connect')
+        self.mock.StubOutWithMock(create_dev_db.MySQLdb, 'connect')
         create_dev_db.DB_PASSWORD = 'bar'
 
-        db = self.mox.CreateMockAnything()
+        db = self.mock.CreateMockAnything()
         create_dev_db.MySQLdb.connect(
             user='tbpweb_dev', passwd='bar').AndReturn(db)
 
-        cursor = self.mox.CreateMockAnything()
+        cursor = self.mock.CreateMockAnything()
         db.cursor().AndReturn(cursor)
         cursor.execute('CREATE DATABASE IF NOT EXISTS tbpweb_dev_foo'
                        ' CHARACTER SET utf8'
@@ -131,7 +131,7 @@ class CreateDevDBTest(TestCase):
         cursor.close()
         db.commit()
 
-        ex_cursor = self.mox.CreateMockAnything()
+        ex_cursor = self.mock.CreateMockAnything()
         db.cursor().AndReturn(ex_cursor)
         ex_cursor.execute(
             ('SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA'
@@ -141,19 +141,19 @@ class CreateDevDBTest(TestCase):
 
         db.close()
 
-        self.mox.ReplayAll()
+        self.mock.ReplayAll()
         self.assertTrue(create_dev_db.create_dev_db('foo'))
-        self.mox.VerifyAll()
+        self.mock.VerifyAll()
 
     def test_fail_to_create_db(self):
-        self.mox.StubOutWithMock(create_dev_db.MySQLdb, 'connect')
+        self.mock.StubOutWithMock(create_dev_db.MySQLdb, 'connect')
         create_dev_db.DB_PASSWORD = 'bar'
 
-        db = self.mox.CreateMockAnything()
+        db = self.mock.CreateMockAnything()
         create_dev_db.MySQLdb.connect(
             user='tbpweb_dev', passwd='bar').AndReturn(db)
 
-        cursor = self.mox.CreateMockAnything()
+        cursor = self.mock.CreateMockAnything()
         db.cursor().AndReturn(cursor)
         cursor.execute('CREATE DATABASE IF NOT EXISTS tbpweb_dev_foo'
                        ' CHARACTER SET utf8'
@@ -161,7 +161,7 @@ class CreateDevDBTest(TestCase):
         cursor.close()
         db.commit()
 
-        ex_cursor = self.mox.CreateMockAnything()
+        ex_cursor = self.mock.CreateMockAnything()
         db.cursor().AndReturn(ex_cursor)
         ex_cursor.execute(
             ('SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA'
@@ -171,49 +171,49 @@ class CreateDevDBTest(TestCase):
 
         db.close()
 
-        self.mox.ReplayAll()
+        self.mock.ReplayAll()
         self.assertFalse(create_dev_db.create_dev_db('foo'))
-        self.mox.VerifyAll()
+        self.mock.VerifyAll()
 
     def test_fail_connect_with_db(self):
-        self.mox.StubOutWithMock(create_dev_db.MySQLdb, 'connect')
+        self.mock.StubOutWithMock(create_dev_db.MySQLdb, 'connect')
         create_dev_db.DB_PASSWORD = 'bar'
 
-        db = self.mox.CreateMockAnything()
+        db = self.mock.CreateMockAnything()
         create_dev_db.MySQLdb.connect(
             user='tbpweb_dev', passwd='bar').AndReturn(db)
 
-        cursor = self.mox.CreateMockAnything()
+        cursor = self.mock.CreateMockAnything()
         db.cursor().AndReturn(cursor)
-        cursor.execute(mox.IgnoreArg()).AndRaise(Exception)
+        cursor.execute(mock.IgnoreArg()).AndRaise(Exception)
 
         db.close()
 
-        self.mox.ReplayAll()
+        self.mock.ReplayAll()
         self.assertRaises(Exception, create_dev_db.create_dev_db, 'foo')
-        self.mox.VerifyAll()
+        self.mock.VerifyAll()
 
     def test_fail_connect_without(self):
-        self.mox.StubOutWithMock(create_dev_db.MySQLdb, 'connect')
+        self.mock.StubOutWithMock(create_dev_db.MySQLdb, 'connect')
         create_dev_db.DB_PASSWORD = 'bar'
 
         create_dev_db.MySQLdb.connect(
             user='tbpweb_dev', passwd='bar').AndReturn(None)
 
-        self.mox.ReplayAll()
+        self.mock.ReplayAll()
         self.assertRaises(Exception, create_dev_db.create_dev_db, 'foo')
-        self.mox.VerifyAll()
+        self.mock.VerifyAll()
 
     def test_fail_bad_db_name(self):
         self.assertFalse(create_dev_db.create_dev_db('foo!??!'))
 
     def test_main(self):
-        self.mox.StubOutWithMock(create_dev_db.getpass, 'getuser')
-        self.mox.StubOutWithMock(create_dev_db, 'create_dev_db')
+        self.mock.StubOutWithMock(create_dev_db.getpass, 'getuser')
+        self.mock.StubOutWithMock(create_dev_db, 'create_dev_db')
         create_dev_db.getpass.getuser().AndReturn('foo')
 
         create_dev_db.create_dev_db('foo')
 
-        self.mox.ReplayAll()
+        self.mock.ReplayAll()
         create_dev_db.main()
-        self.mox.VerifyAll()
+        self.mock.VerifyAll()

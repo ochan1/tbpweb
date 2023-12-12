@@ -3,7 +3,7 @@ import datetime
 from django.contrib.auth import get_user_model
 from django.test import TestCase
 from django.utils import timezone
-import unittest.mox
+import unittest.mock as mock
 
 from base.models import OfficerPosition
 from base.models import Term
@@ -34,20 +34,20 @@ class ProjectReportTest(TestCase):
             date=timezone.now().date())
         self.project_report.save()
 
-        self.mox = mox.Mox()
+        self.mock = mock.Mock()
         self.tz = timezone.get_current_timezone()
 
     def tearDown(self):
-        self.mox.UnsetStubs()
+        self.mock.UnsetStubs()
 
     def test_completed_time(self):
-        self.mox.StubOutWithMock(timezone, 'now')
+        self.mock.StubOutWithMock(timezone, 'now')
 
         mock_time = timezone.make_aware(
             datetime.datetime(2012, 1, 1, 1, 1, 1), self.tz)
         timezone.now().MultipleTimes().AndReturn(mock_time)
 
-        self.mox.ReplayAll()
+        self.mock.ReplayAll()
 
         self.assertFalse(self.project_report.complete)
         self.assertIsNone(self.project_report.first_completed_at)
@@ -65,7 +65,7 @@ class ProjectReportTest(TestCase):
         self.assertFalse(self.project_report.complete)
         self.assertIsNone(self.project_report.first_completed_at)
 
-        self.mox.VerifyAll()
+        self.mock.VerifyAll()
 
     def test_complete_time_no_overwrite(self):
         original_time = timezone.make_aware(
