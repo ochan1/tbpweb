@@ -1,5 +1,5 @@
-from test.test_support import EnvironmentVarGuard
-from test.test_support import import_fresh_module
+from test.support import EnvironmentVarGuard
+from test.support import import_fresh_module
 
 from django import forms
 from django.contrib.auth.models import AnonymousUser
