@@ -36,10 +36,9 @@ class UserInfoTestCase(TestCase):
         # object having a stale reference to their corresponding userprofile
         self.user = self.user_model.objects.get(pk=self.user.pk)
 
-        self.term = Term(term=Term.SPRING, year=2013, current=True)
-        self.term.save()
-        self.term_old = Term(term=Term.SPRING, year=2012)
-        self.term_old.save()
+        self.term, _ = Term.objects.get_or_create(term=Term.SPRING, year=2013)
+        self.term.set_term_current_and_save()
+        self.term_old, _  = Term.objects.get_or_create(term=Term.SPRING, year=2012, current=False)
 
         self.committee = OfficerPosition(
             short_name='it',
@@ -366,8 +365,7 @@ class StudentOrgUserProfilesTest(UserInfoTestCase):
             list(self.profile.get_officer_positions()),
             [self.advisor_pos, self.committee, self.house_leader,
              self.advisor_pos])
-        older_term = Term(term=Term.SPRING, year=2008)
-        older_term.save()
+        older_term, _  = Term.objects.get_or_create(term=Term.SPRING, year=2008)
         # Add a house leader officer position in an even older term:
         Officer(user=self.user, position=self.house_leader,
                 term=older_term).save()

@@ -260,6 +260,17 @@ class Term(models.Model):
             officers = Officer.objects.filter(term=self)
             for officer in officers:
                 officer._add_user_to_officer_groups()
+    
+    def set_term_current_and_save(self):
+        """Sets the term as current, resetting other 'current' terms (and saves them),
+        and then saves itself.
+        """
+        other_current_terms = Term.objects.get(current=True)
+        other_current_terms.update(current=False)
+        for item in other_current_terms:
+            item.save()
+        self.current = True
+        self.save()
 
     class Meta(object):
         ordering = ('id',)

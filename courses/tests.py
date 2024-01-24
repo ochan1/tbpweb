@@ -44,10 +44,11 @@ class CoursesTestCase(TestCase):
         self.instructor_ee_2 = Instructor(first_name='Bau', last_name='Tate',
                                           department=self.dept_ee)
         self.instructor_ee_2.save()
-        self.term = Term(term='sp', year=2013, current=True)
-        self.term.save()
-        self.term2 = Term(term='sp', year=2014, current=False)
-        self.term2.save()
+
+        self.term = Term.object.get(term='sp', year=2013)
+        self.term.set_term_current_and_save()
+        self.term2 = Term.object.get(term='sp', year=2014, current=False)
+
         self.course_instance_cs_1 = CourseInstance(
             term=self.term,
             course=self.course_cs_1)
@@ -373,7 +374,7 @@ class CourseDetailViewTest(CoursesTestCase):
 
         # Compare the pairs.
         pairs = [list(p[0:2]) for p in resp.context['paired_exams']]
-        self.assertItemsEqual(pairs, [[self.exam_ee_1, self.exam_ee_2],
+        self.assertListEqual(pairs, [[self.exam_ee_1, self.exam_ee_2],
                                       [self.exam_ee_3, None],
                                       [self.exam_ee_4, None]])
         for exam_pair in resp.context['paired_exams']:
