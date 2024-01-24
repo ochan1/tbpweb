@@ -97,7 +97,7 @@ class ExamTest(TestCase):
                 number=Exam.MT1, instructors='Beta_Tau',
                 type=Exam.EXAM, ext='.txt'))
         self.assertEquals(
-            self.test_exam1,
+            str(self.test_exam1),
             ('{term} {number} {type} for {course}, taught by '
              '{instructors}').format(
                 term='Spring 2013', number='Midterm 1', type='Exam',

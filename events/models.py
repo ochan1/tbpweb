@@ -365,7 +365,7 @@ class EventSignUp(models.Model):
             ('view_driving_numbers', 'Can view driving number details'),
         )
 
-    def __unicode__(self):
+    def __str__(self):
         action = 'unsigned' if self.unsignup else 'signed'
         if self.user is None:
             name = self.name
