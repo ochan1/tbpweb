@@ -1,4 +1,4 @@
-import unittest.mox
+import unittest.mock
 
 from django import forms
 from django.contrib.auth import get_user_model
@@ -134,7 +134,7 @@ class CompanyEmailerTest(TestCase):
             last_name='Company')
         self.assertTrue(
             self.client.login(username='testcompany', password='secretpass'))
-        self.mox = mox.Mox()
+        self.mock = mock.Mock()
         self.default_entry = {'name': 'Test Company',
                               'email': 'test@tbp.berkeley.edu',
                               'message': 'Message text' * 10,
@@ -143,16 +143,16 @@ class CompanyEmailerTest(TestCase):
                               'recaptcha': 'whatever'}
 
         mock_fields = ContactCaptcha.base_fields.copy()
-        self.mox.StubOutWithMock(ContactCaptcha, 'base_fields')
+        self.mock.StubOutWithMock(ContactCaptcha, 'base_fields')
         mock_fields['recaptcha'] = forms.CharField(
             error_messages={'required': 'Please fill this in.'})
         ContactCaptcha.base_fields = mock_fields
-        self.mox.ReplayAll()
+        self.mock.ReplayAll()
 
     def tearDown(self):
-        self.mox.VerifyAll()
-        self.mox.UnsetStubs()
-        self.mox.ResetAll()
+        self.mock.VerifyAll()
+        self.mock.UnsetStubs()
+        self.mock.ResetAll()
 
     def test_get_request(self):
         self.client.logout()
