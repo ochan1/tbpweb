@@ -22,7 +22,7 @@ CACHES['default'] = {
 # same apps as what the full website will have)
 
 # We don't need to test these apps.
-BLACKLISTED_APPS = ['django_evolution', 'south', 'debug_toolbar']
+BLACKLISTED_APPS = ['django_evolution', 'debug_toolbar']
 for app in BLACKLISTED_APPS:
     if app in INSTALLED_APPS:
         INSTALLED_APPS.remove(app)
