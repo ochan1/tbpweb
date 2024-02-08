@@ -261,11 +261,11 @@ class TermTest(TestCase):
 
     def test_string(self):
         term = Term(term=Term.FALL, year=2012, current=False)
-        self.assertEqual(term, 'Fall 2012')
+        self.assertEqual(str(term), 'Fall 2012')
 
     def test_string_current(self):
         term = Term(term=Term.FALL, year=2012, current=True)
-        self.assertEqual(term, 'Fall 2012 (Current)')
+        self.assertEqual(str(term), 'Fall 2012 (Current)')
 
     def test_verbose_name(self):
         term = Term(term=Term.FALL, year=2012, current=False)
