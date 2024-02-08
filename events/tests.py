@@ -97,6 +97,10 @@ class EventTesting(TestCase):
 
 
 class EventTest(EventTesting):
+    def setUp(self):
+        Term.objects.all().delete()
+        EventTesting.setUp(self)
+
     def test_eventtype_get_by_natural_key(self):
         event_type_name = 'New Test Event Type'
         EventType(name=event_type_name).save()

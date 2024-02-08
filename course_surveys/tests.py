@@ -11,6 +11,7 @@ from course_surveys.forms import SurveyForm
 
 class SurveyFormTest(TestCase):
     def setUp(self):
+        Term.objects.all().delete()
         self.department_cs = Department(
             long_name='Computer Science',
             short_name='CS',

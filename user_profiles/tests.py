@@ -19,6 +19,7 @@ class UserInfoTestCase(TestCase):
     user info used in multiple test cases.
     """
     def setUp(self):
+        Term.objects.all().delete()  # TODO (Oscar 1/28/2024): General: Each test case needs to reset db
         Group.objects.create(name='Current Candidate')
         Group.objects.create(name='Member')
 
@@ -36,9 +37,10 @@ class UserInfoTestCase(TestCase):
         # object having a stale reference to their corresponding userprofile
         self.user = self.user_model.objects.get(pk=self.user.pk)
 
-        self.term, _ = Term.objects.get_or_create(term=Term.SPRING, year=2013)
-        self.term.set_term_current_and_save()
-        self.term_old, _  = Term.objects.get_or_create(term=Term.SPRING, year=2012, current=False)
+        self.term = Term(term=Term.SPRING, year=2013, current=True)
+        self.term.save()
+        self.term_old = Term(term=Term.SPRING, year=2012)
+        self.term_old.save()
 
         self.committee = OfficerPosition(
             short_name='it',
@@ -188,6 +190,7 @@ class UserProfilesTest(UserInfoTestCase):
 
 class StudentOrgUserProfilesTest(UserInfoTestCase):
     def setUp(self):
+        Term.objects.all().delete()  # TODO (Oscar 1/28/2024): General: Each test case needs to reset db
         super(StudentOrgUserProfilesTest, self).setUp()
         self.model = StudentOrgUserProfile
         self.profile = self.model(user=self.user)
@@ -365,7 +368,8 @@ class StudentOrgUserProfilesTest(UserInfoTestCase):
             list(self.profile.get_officer_positions()),
             [self.advisor_pos, self.committee, self.house_leader,
              self.advisor_pos])
-        older_term, _  = Term.objects.get_or_create(term=Term.SPRING, year=2008)
+        older_term = Term(term=Term.SPRING, year=2008)
+        older_term.save()
         # Add a house leader officer position in an even older term:
         Officer(user=self.user, position=self.house_leader,
                 term=older_term).save()

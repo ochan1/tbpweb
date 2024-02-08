@@ -6,10 +6,12 @@ from django.test.utils import override_settings
 from base.models import Term
 from base.management.commands.genterms import generate_terms
 
+# TODO (Oscar 1/28/2024): Is there a way to clear db from scratch on each function?
 
 class GenerateTermsTest(TransactionTestCase):
     @override_settings(TERM_TYPE='quarter')
     def test_generate_terms_quarter_plus_summer(self):
+        Term.objects.all().delete()
         self.assertFalse(Term.objects.all().exists())
         current_year = datetime.date.today().year
         terms_per_year = 4
@@ -25,6 +27,7 @@ class GenerateTermsTest(TransactionTestCase):
 
     @override_settings(TERM_TYPE='semester')
     def test_generate_terms_semester(self):
+        Term.objects.all().delete()
         self.assertFalse(Term.objects.all().exists())
         current_year = datetime.date.today().year
         terms_per_year = 2
@@ -38,7 +41,7 @@ class GenerateTermsTest(TransactionTestCase):
         self.assertFalse(Term.objects.filter(current=True).exists())
 
         # Prepare further testing
-        current_term = Term.objects.get(term=Term.SPRING, year=2017)
+        current_term = Term.objects.get(term=Term.SPRING, year=current_year)
         current_term.current = True
         current_term.save()
         self.assertEqual(current_term, Term.objects.get_current_term())

@@ -21,6 +21,7 @@ def make_test_department():
 
 class CoursesTestCase(TestCase):
     def setUp(self):
+        Term.objects.all().delete()
         self.dept_cs = Department(
             long_name='Computer Science',
             short_name='CS',
@@ -44,11 +45,10 @@ class CoursesTestCase(TestCase):
         self.instructor_ee_2 = Instructor(first_name='Bau', last_name='Tate',
                                           department=self.dept_ee)
         self.instructor_ee_2.save()
-
-        self.term = Term.object.get(term='sp', year=2013)
-        self.term.set_term_current_and_save()
-        self.term2 = Term.object.get(term='sp', year=2014, current=False)
-
+        self.term = Term(term='sp', year=2013, current=True)
+        self.term.save()
+        self.term2 = Term(term='sp', year=2014, current=False)
+        self.term2.save()
         self.course_instance_cs_1 = CourseInstance(
             term=self.term,
             course=self.course_cs_1)
