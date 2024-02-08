@@ -9,6 +9,8 @@ from houses.models import House
 from houses.models import HouseMember
 
 
+# TODO (Oscar 1/28/2024): Need to clear out the entire db at start
+
 class HouseMemberAssignmentTest(TestCase):
     fixtures = ['house.yaml',
                 'officer_position.yaml',
