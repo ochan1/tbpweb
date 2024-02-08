@@ -744,6 +744,7 @@ class SettingsTemplateTagsTest(TestCase):
             '{% load settings_values %}{{ base_string }}'
             '{% settings "TEST_SETTING" %}'
         )
+        # TODO: Need to understand how to load from 'setting'
         self.assertEquals(self.base_string + self.test_setting,
                           template.render(self.context))
 
