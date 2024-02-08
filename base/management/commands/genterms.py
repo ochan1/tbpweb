@@ -1,5 +1,5 @@
 import datetime
-from optparse import make_option
+# from optparse import make_option
 
 from django.conf import settings
 from django.core.management.base import BaseCommand
@@ -9,14 +9,21 @@ from base.models import Term
 
 
 class Command(BaseCommand):
-    option_list = BaseCommand.option_list + (
-        make_option(
-            '-s', '--span', type='int', default=5,
-            help='Generate terms from (year - span) to (year + span)'),
-        make_option(
-            '--summer', action='store_true', dest='summer', default=False,
+    # option_list = BaseCommand.option_list + (
+    #     make_option(
+    #         '-s', '--span', type='int', default=5,
+    #         help='Generate terms from (year - span) to (year + span)'),
+    #     make_option(
+    #         '--summer', action='store_true', dest='summer', default=False,
+    #         help='Generate summer terms also')
+    #     )
+    # option_list = BaseCommand.option_list
+
+    def add_arguments(self, parser):
+        parser.add_argument('-s', '--span', type='int', default=5,
+            help='Generate terms from (year - span) to (year + span)')
+        parser.add_argument('--summer', action='store_true', dest='summer', default=False,
             help='Generate summer terms also')
-        )
 
     def handle(self, *args, **kwargs):
         """Create Term instances for current year +/-span(years) inclusive."""
