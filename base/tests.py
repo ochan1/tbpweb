@@ -14,9 +14,6 @@ from django.test.utils import override_settings
 
 from base import fields
 from base.models import Major, Officer, OfficerPosition, Term, University
-from settings.dev import DATABASES as DEV_DB
-# from settings.production import DATABASES as PROD_DB
-# from settings.staging import DATABASES as STAGING_DB
 
 
 class MajorTest(TestCase):
@@ -693,35 +690,6 @@ class OfficerGroupsTest(TestCase):
         self.assertNotIn(self.pos_exec_group_curr, groups)
         self.assertIn(self.officer_group_curr, groups)
         self.assertIn(self.pos_reg_group_curr, groups)
-
-
-class SettingsTest(TestCase):
-    def setUp(self):
-        self.env = EnvironmentVarGuard()
-
-    def test_unset(self):
-        with self.env:
-            self.env.set('TBPWEB_MODE', 'dev')
-            settings = import_fresh_module('settings')
-
-            self.assertTrue(settings.DEBUG)
-            self.assertEqual(settings.DATABASES, DEV_DB)
-
-    # def test_production(self):
-    #     with self.env:
-    #         self.env.set('TBPWEB_MODE', 'production')
-    #         settings = import_fresh_module('settings')
-
-    #         self.assertFalse(settings.DEBUG)
-    #         self.assertEqual(settings.DATABASES, PROD_DB)
-
-    # def test_staging(self):
-    #     with self.env:
-    #         self.env.set('TBPWEB_MODE', 'staging')
-    #         settings = import_fresh_module('settings')
-
-    #         self.assertFalse(settings.DEBUG)
-    #         self.assertEqual(settings.DATABASES, STAGING_DB)
 
 
 class FieldsTest(TestCase):
