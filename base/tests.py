@@ -491,48 +491,48 @@ class OfficerGroupsTest(TestCase):
         # non-exec) officer position. We should expect the corresponding groups
         # to be Officer and the group specific to the position:
         groups = [self.officer_group, self.pos_reg_group]
-        self.assertItemsEqual(
-            groups,
-            self.position_regular.get_corresponding_groups())
-        self.assertItemsEqual(
-            groups,
-            self.position_regular.get_corresponding_groups(self.term_old))
+        self.assertEqual(
+            frozenset(groups),
+            frozenset(self.position_regular.get_corresponding_groups()))
+        self.assertEqual(
+            frozenset(groups),
+            frozenset(self.position_regular.get_corresponding_groups(self.term_old)))
         # For the current term:
         groups.extend([self.officer_group_curr, self.pos_reg_group_curr])
-        self.assertItemsEqual(
-            groups,
-            self.position_regular.get_corresponding_groups(term=self.term))
+        self.assertEqual(
+            frozenset(groups),
+            frozenset(self.position_regular.get_corresponding_groups(term=self.term)))
 
         # For the executive position, the corresponding groups will also
         # include the "Executive" groups:
         groups = [self.officer_group, self.exec_group, self.pos_exec_group]
-        self.assertItemsEqual(
-            groups,
-            self.position_exec.get_corresponding_groups())
-        self.assertItemsEqual(
-            groups,
-            self.position_exec.get_corresponding_groups(self.term_old))
+        self.assertEqual(
+            frozenset(groups),
+            frozenset(self.position_exec.get_corresponding_groups()))
+        self.assertEqual(
+            frozenset(groups),
+            frozenset(self.position_exec.get_corresponding_groups(self.term_old)))
         # For the current term:
         groups.extend([self.officer_group_curr, self.exec_group_curr,
                        self.pos_exec_group_curr])
-        self.assertItemsEqual(
-            groups,
-            self.position_exec.get_corresponding_groups(term=self.term))
+        self.assertEqual(
+            frozenset(groups),
+            frozenset(self.position_exec.get_corresponding_groups(term=self.term)))
 
         # For the auxiliary position, there should be no "Officer" group or
         # "Executive" group (since the position is non-exec):
         groups = [self.pos_aux_group]
-        self.assertItemsEqual(
-            groups,
-            self.position_auxiliary.get_corresponding_groups())
-        self.assertItemsEqual(
-            groups,
-            self.position_auxiliary.get_corresponding_groups(self.term_old))
+        self.assertEqual(
+            frozenset(groups),
+            frozenset(self.position_auxiliary.get_corresponding_groups()))
+        self.assertEqual(
+            frozenset(groups),
+            frozenset(self.position_auxiliary.get_corresponding_groups(self.term_old)))
         # For the current term:
         groups.append(self.pos_aux_group_curr)
-        self.assertItemsEqual(
-            groups,
-            self.position_auxiliary.get_corresponding_groups(term=self.term))
+        self.assertEqual(
+            frozenset(groups),
+            frozenset(self.position_auxiliary.get_corresponding_groups(term=self.term)))
 
     def test_add_groups(self):
         # Test the Officer method for adding the user to groups. Note that no
@@ -578,7 +578,7 @@ class OfficerGroupsTest(TestCase):
         # should return to the same positions as from before the exec position
         # added any:
         officer_exec._remove_user_from_officer_groups()
-        self.assertItemsEqual(groups, list(self.user.groups.all()))
+        self.assertEqual(frozenset(groups), frozenset(self.user.groups.all()))
 
     def test_officer_post_save(self):
         """Test that a user is added to the appropriate groups on post-save."""
@@ -593,7 +593,7 @@ class OfficerGroupsTest(TestCase):
         self.assertFalse(self.user.groups.exists())
         officer_reg.save()
         # Check that all of the expected groups were added for this user:
-        self.assertItemsEqual(expected_groups, self.user.groups.all())
+        self.assertEqual(frozenset(expected_groups), frozenset(self.user.groups.all()))
 
         # Add another position, and check that the correct groups are added:
         officer_exec = Officer(user=self.user, position=self.position_exec,
@@ -601,7 +601,7 @@ class OfficerGroupsTest(TestCase):
         officer_exec.save()
         expected_groups.update(self.position_exec.get_corresponding_groups(
             term=self.term_old))
-        self.assertItemsEqual(expected_groups, self.user.groups.all())
+        self.assertEqual(frozenset(expected_groups), frozenset(self.user.groups.all()))
 
     def test_officer_post_delete(self):
         """Test that a user is removed from the appropriate groups on
@@ -627,7 +627,7 @@ class OfficerGroupsTest(TestCase):
         # Now delete exec officer, and the user's groups should return to the
         # same positions as from before the exec position added any:
         officer_exec.delete()
-        self.assertItemsEqual(groups, list(self.user.groups.all()))
+        self.assertEqual(frozenset(groups), frozenset(self.user.groups.all()))
 
         # And delete the regular officer, and the user should be part of no
         # more groups:
@@ -649,12 +649,12 @@ class OfficerGroupsTest(TestCase):
             term=self.term))
         groups = list(self.user.groups.all())
         self.assertTrue(len(groups) > 0)
-        self.assertItemsEqual(groups, expected_groups)
+        self.assertEqual(frozenset(groups), frozenset(expected_groups))
 
         # Make sure saving the current term is a no-op:
         self.term.save()
         groups = list(self.user.groups.all())
-        self.assertItemsEqual(groups, expected_groups)
+        self.assertEqual(frozenset(groups), frozenset(expected_groups))
 
         # Add a regular officer position for this user in a new term (not
         # "current"), and the user's group count should increase:
@@ -666,7 +666,7 @@ class OfficerGroupsTest(TestCase):
         expected_groups.update(self.position_regular.get_corresponding_groups(
             term=term_new))
         groups = list(self.user.groups.all())
-        self.assertItemsEqual(groups, expected_groups)
+        self.assertEqual(frozenset(groups), frozenset(expected_groups))
 
         # Now change the "new" term to be the current term:
         term_new.current = True
@@ -683,7 +683,7 @@ class OfficerGroupsTest(TestCase):
             term=self.term))
         expected_groups.update(self.position_regular.get_corresponding_groups(
             term=term_new))
-        self.assertItemsEqual(groups, expected_groups)
+        self.assertEqual(frozenset(groups), frozenset(expected_groups))
 
         # Double-check some of the "Current" groups:
         self.assertNotIn(self.exec_group_curr, groups)
