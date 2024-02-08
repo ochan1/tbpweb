@@ -106,7 +106,7 @@ class ExamTest(TestCase):
     def test_flag_properites(self):
         exam_flag = ExamFlag(exam=self.test_exam1)
         self.assertEquals(
-            exam_flag, self.test_exam1 + ' Flag')
+            str(exam_flag), str(self.test_exam1) + ' Flag')
         self.assertFalse(exam_flag.resolved)
 
     def test_delete_exam_with_file(self):

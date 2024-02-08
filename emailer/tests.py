@@ -1,4 +1,4 @@
-import unittest.mock
+import unittest.mock as mock
 
 from django import forms
 from django.contrib.auth import get_user_model
