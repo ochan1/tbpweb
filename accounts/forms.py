@@ -13,6 +13,8 @@ from django.utils.http import urlsafe_base64_encode
 
 from companies.models import CompanyRep
 
+import datetime
+
 class UserFormMixin(object):
     """Change the username regex and require user fields."""
     def __init__(self, *args, **kwargs):
@@ -42,6 +44,24 @@ class UserChangeForm(UserFormMixin, auth_forms.UserChangeForm):
 
 class AuthenticationForm(auth_forms.AuthenticationForm):
     """An AuthenticationForm that takes into account Company users."""
+
+    def clean(self):
+        # Due to the migration of the website from the old server to new server,
+        #  where old server used a different method of authentication,
+        #  all users created on or before August 2022 must change their password
+        username = self.cleaned_data["username"]
+        user = get_user_model().objects.filter(username=username).first()
+        if user and (not user.has_usable_password()):
+            raise forms.ValidationError(
+                'Your account requires the password to be reset. Please click on '
+                '"Forgot your password? Reset it!" below to reset your password '
+                'or "Contact Us" if you need further assistance.',
+                code='invalid'
+            )
+        # If user passes the password check, perform regular login
+        # or let 'authenticate' handle when User is None
+        return super().clean()
+
     def confirm_login_allowed(self, user: AbstractBaseUser):
         """Ensures that Company users and their Company's account expiration
         are taken into consideration to allow login.
