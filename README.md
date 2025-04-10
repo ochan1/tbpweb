@@ -9,8 +9,9 @@ In summary, you need the following installed:
 * `git`
 * Any `sh` shell (e.g. `bash`, `zsh`, etc.) / `Git Bash` on Windows
 * Miniconda (or Anaconda)
+* **MacOS users**: You must install `libmagic`: `brew install libmagic`
 * Ruby (OCF uses 2.7.7, but we can use 3.1.X) (Windows should use `Ruby+Devkit`)
-    * Install "Compass": `gem install compass -v 1.0.3`
+    * Install "Compass": `gem install compass -v 1.0.3` (**MacOS users**: You may have to use `sudo` at the beginning and enter your admin password)
 
 ## Setup and Development
 
@@ -23,7 +24,7 @@ All commands must be ran on a `sh` shell
 In summary, the commands you will use are (in general this order):
 ```sh
 $ cd tbpweb                                     # enter our main directory
-$ conda env create -f config/tbpweb-dev.yml     # create our Conda Environment and install dependencies
+$ conda env create --file=config/tbpweb-dev.yml     # create our Conda Environment and install dependencies
 $ conda activate tbpweb-dev                     # enter our Conda Environment
 $ python manage.py makemigrations               # Create migrations files
 $ python manage.py migrate                      # apply all database changes
